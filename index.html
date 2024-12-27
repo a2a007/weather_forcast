@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+    <h1 style="padding: 10%;">Weather Forecast</h1>
+    <form>
+        <label for="city"></label>
+        <input placeholder="city" name="city" id="city">
+        <button style="border-radius: 6px;" type="button" onclick="weather()">search</button>
+    </form>
+            <h3 style="color: rgb(35, 37, 49);" id="head1"></h3>
+            <img id="img" src="" >
+            <b><p style="text-decoration: solid;" id="text"></p></b>
+            <p id= humidity></p>
+            <p id="wind"></p><p></p>
+            <p id="pressure"></p>
+            <i><p id="location"></p></i>
+            <p style="color: red;" id="err"></p>
+    </div>
+    <script>
+    let img=document.getElementById('img');
+    function weather(){
+        document.getElementById("head1").innerHTML = '';
+        document.getElementById("location").innerHTML='';
+        document.getElementById("pressure").innerHTML='';
+        document.getElementById("text").innerHTML ='';
+        document.getElementById("humidity").innerHTML = '';
+        document.getElementById("wind").innerHTML = '';
+        document.getElementById("err").innerHTML = '';
+        img.setAttribute('src', '');
+        let city=document.getElementById('city').value;
+        const url = `https://api.weatherapi.com/v1/current.json?key=60f8a59fca3c4a91a4854155242512&q=${city}`;
+        const fet = fetch(url);
+        fet.then((response)=>{
+            if(!response.ok)
+                console.log(`${response.status}`)
+            else
+                return response.json()})
+        .then((response)=>{
+        try
+       { data=response; 
+        console.log(data)
+        if(data==undefined){
+         document.getElementById("err").innerHTML="No result found!"
+        }
+        else
+        {img.setAttribute('src',`https:${data.current.condition.icon}`)
+        console.log(`https:${data.current.condition.icon}`)
+        document.getElementById("head1").innerHTML=data.current.temp_f+"℉"+"/ "+data.current.temp_c+"℃";
+        document.getElementById("location").innerHTML="location: "+data.location.name+","+data.location.region+","+data.location.country;
+        document.getElementById("pressure").innerHTML="Pressurein bar: "+data.current.pressure_in+"°";
+        document.getElementById("text").innerHTML=data.current.condition.text;
+        document.getElementById("humidity").innerHTML="Huidity: "+data.current.humidity+"%";
+        document.getElementById("wind").innerHTML=" Wind speed: "+data.current.wind_kph+"/kmp";
+        }
+       }
+        catch(err){
+         document.write.getElementById("err").innerHTML="No result found!,Try nearby city";
+        }
+    }).catch((err)=>{
+        document.write,getElementById("err").innerHTML="error in fetching the data trying again !";
+    })
+}
+</script>
+</body>
+</html>
